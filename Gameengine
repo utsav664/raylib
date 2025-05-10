@@ -1,0 +1,54 @@
+// main.cpp
+#include "raylib.h"
+
+int main() {
+    InitWindow(1280, 720, "Custom Engine");
+    SetTargetFPS(60);
+
+    while (!WindowShouldClose()) {
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+
+        DrawText("Custom Engine Running", 10, 10, 20, BLACK);
+
+        EndDrawing();
+    }
+
+    CloseWindow();
+    return 0;
+}
+Image image = LoadImage("assets/my_picture.png");
+Texture2D texture = LoadTextureFromImage(image);
+UnloadImage(image);
+DrawTexture(texture, 200, 200,WHITE);
+struct Transform { Vector2 position; };
+struct Renderable { Texture2D texture; };
+
+struct Entity {
+    Transform transform;
+    Renderable renderable;
+};
+
+void DrawEntity(Entity e) {
+    DrawTexture(e.renderable.texture, e.transform.position.x, e.transform.position.y, WHITE);
+}
+#include <lua.hpp>
+
+lua_State* L = luaL_newstate();
+luaL_openlibs(L);
+luaL_dofile(L, "scripts/vehicle.lua");
+lua_close(L);
+function onUpdate()
+    print("Vehicle is moving...")
+end
+/Engine
+  /Assets
+  /Core
+    main.cpp
+    renderer.cpp
+    ecs.cpp
+  /Scripts
+    npc.lua
+    car.lua
+  /Tools
+    MapLoader.cpp
